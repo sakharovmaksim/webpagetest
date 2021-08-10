@@ -1,0 +1,16 @@
+key = "123"
+host = "http://localhost:4000"
+port = "3030"
+timer = "1h"
+
+[[metrics]]
+key = "time_to_first_byte_ms"
+help = "First Byte in ms."
+data = [
+    "median.firstView.TTFB",
+]
+
+[[sites]]
+name = "asna home"
+url = "https://www.asna.ru"
+location = "Test.LAN"

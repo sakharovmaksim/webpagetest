@@ -1,0 +1,33 @@
+version: '3.7'
+services:
+  wpt-server:
+    image: webpagetest/server:release
+    volumes:
+      - ./docker/locations.ini:/var/www/html/settings/locations.ini:ro
+    ports:
+      - "4000:80"
+
+  wpt-agent:
+    image: webpagetest/agent:release
+    network_mode: "host"
+    volumes:
+      - ./docker/entrypoint.sh:/entrypoint.sh
+    entrypoint:
+      - /entrypoint.sh
+    environment:
+      - SERVER_URL=http://localhost:4000/work/
+      - LOCATION=Test
+
+  wpt-tester:
+    image: webpagetest-prometheus-exporter
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - ./config-dev.toml:/config.toml
+    command:
+      - /config.toml
+    ports:
+      - "3030:3030"
+    depends_on:
+      - wpt-server
+      - wpt-agent
